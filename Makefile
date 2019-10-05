@@ -20,6 +20,7 @@ MLX		= -I./minilibx_macos -L ./minilibx_macos -lmlx -framework OpenGL -framework
 SRCS	= draw.c\
 			julia.c\
 			mandel.c\
+			burningship.c\
 
 OBJ 	= ${SRCS:.c=.o}
 INCLUDE = -I fractol.h -L ./libft -lft

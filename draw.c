@@ -58,21 +58,20 @@ void		*make_col_arr(void)
 
 
 
-int main ()
+int main (int ac, char **av)
 {
 	int width = WIN_X;
 	int height = WIN_Y;
 	double zoom = 1.0; 
   	double move_x = -0.5; 
   	double move_y = 0.0; 
- 	int max = 300;
- 	int stop = 100;
+
 	void *mlx_ptr = mlx_init();
 	void *win_ptr = mlx_new_window(mlx_ptr, width, height, "julia");
 	void *img_ptr = mlx_new_image(mlx_ptr, 2000, 1000);
 
-	draw_mandel(img_ptr);
-	mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr , 400, 400);
+	draw_ship(img_ptr);
+	mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr , 400, 0);
 	mlx_key_hook(win_ptr, deal_key, (void *)0);
 	
 	mlx_loop(mlx_ptr);
