@@ -12,8 +12,7 @@
 
 #include "fractol.h"
 
-#define WIN_X 1000
-#define WIN_Y 800
+
 #define M_PI        3.14159265358979323846264338327950288  
 # define SQR(x)					(x * x)
 # define BLACK			0x0
@@ -68,7 +67,7 @@ int main (int ac, char **av)
 
 	void *mlx_ptr = mlx_init();
 	void *win_ptr = mlx_new_window(mlx_ptr, width, height, "julia");
-	void *img_ptr = mlx_new_image(mlx_ptr, 2000, 1000);
+	void *img_ptr = mlx_new_image(mlx_ptr, WIN_Y, WIN_X);
 
 	//if (ft_strcmp(av[2], "julia"))
 	//	draw_julia(img_ptr);

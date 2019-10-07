@@ -18,8 +18,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 # define KEY_ESC 53
-#define WIN_X 1000
-#define WIN_Y 800
+#define WIN_X 500
+#define WIN_Y 500
 #define M_PI        3.14159265358979323846264338327950288  
 # define SQR(x)					(x * x)
 # define BLACK			0x0
@@ -37,6 +37,10 @@ typedef struct s_fract
 	double move_x;
 	double move_y;
 	int max;
+	int flag;
+	double				mouse_x;
+	double				mouse_y;
+
 }			t_fract;
 
 

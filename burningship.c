@@ -14,27 +14,29 @@
 
 static	int	calc_iters_b(t_fract *var, int row, int col)
 {
-	double	y;
-	double	x;
-	double	cr;
-	double	ci;
+	double	new_im;
+	double	new_re;
+	double	pr;
+	double	pi;
 	int		i;
-	int temp;
+	int old_im;
+	double old_re;
 	var->zoom = 1; 
   var->move_x = -0.5; 
   var->move_y = 0; 
   var->max = 300;
 
-	y = 0;
-	x = 0;
-	cr = 2.0 * (col - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
-	ci = 2.0 * (row - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
+	new_re = 0;
+	new_im = 0;
+	pr = 2.0 * (col - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
+	pi = 2.0 * (row - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
 	i = -1;
-	while (SQR(x) + SQR(y) <= 4.0 && ++i < var->max)
+	while (SQR(new_re) + SQR(new_im) <= 4.0 && ++i < var->max)
 	{
-		temp = SQR(x) - SQR(y) + cr;
-		y = 2 * fabs(x * y) + ci;
-		x = temp;
+		//old_re = new_re;
+		old_re = SQR(new_re) - SQR(new_im) + pr;
+		new_im = 2 * fabs(new_re * new_im) + pi;
+		new_re = old_re;
 	}
 	return (i);
 }
@@ -64,9 +66,9 @@ void		draw_ship(void *img_ptr)
 		{
 			i = calc_iters_b(var, row, col);
 			if (i == max)
-				data[col + row * size_line / 4] = BLACK;
+				data[col * 4 + row * WIN_Y * 4] = BLACK;
 			else
-				data[col + row * size_line ] = color_arr[i % 64];
+				data[col * 4 + row * WIN_Y * 4] = color_arr[i % 64];
 		}
 		row++;
 	}

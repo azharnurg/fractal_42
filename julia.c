@@ -30,8 +30,8 @@ static	int	calc_iters(t_fract *var, int row, int col)
 	{
 		old_re = new_re;
 		old_im = new_im;
-		new_re = SQR(old_re) - SQR(new_im) + (var->move_x);
-		new_im = 2 * (old_im * old_re) + (var->move_y);
+		new_re = SQR(old_re) - SQR(new_im) + -0.7;
+		new_im = 2 * (old_im * old_re) + 0.27015;
 	}
 	return (i);
 }
@@ -60,9 +60,9 @@ void	draw_julia(void *img_ptr)
 		{
 			i = calc_iters(&var, row, col);
 			if (i == 64)
-				data[row + col * size_line / 4] = BLACK;
+				data[col * 4 + row * (WIN_Y * 4)] = BLACK;
 			
-				data[col + row * size_line ] = color_arr[i % 64];
+				data[col * 4 + row * (WIN_Y * 4)] = color_arr[i % 64];
 		}
 		row++;
 	}
