@@ -12,7 +12,7 @@
 
 #include "fractol.h"
 
-static	int	calc_iters_b(double zoom,double move_x, double move_y, int max, int row, int col)
+static	int	calc_iters_b(t_fract *var, int row, int col)
 {
 	double	y;
 	double	x;
@@ -20,13 +20,17 @@ static	int	calc_iters_b(double zoom,double move_x, double move_y, int max, int r
 	double	ci;
 	int		i;
 	int temp;
+	var->zoom = 1; 
+  var->move_x = -0.5; 
+  var->move_y = 0; 
+  var->max = 300;
 
 	y = 0;
 	x = 0;
-	cr = 2.0 * (col - WIN_X / 2) / (0.5 * zoom * WIN_X) + move_x;
-	ci = 2.0 * (row - WIN_Y / 2) / (0.5 * zoom * WIN_Y) + move_y;
+	cr = 2.0 * (col - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
+	ci = 2.0 * (row - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
 	i = -1;
-	while (SQR(x) + SQR(y) <= 4.0 && ++i < max)
+	while (SQR(x) + SQR(y) <= 4.0 && ++i < var->max)
 	{
 		temp = SQR(x) - SQR(y) + cr;
 		y = 2 * fabs(x * y) + ci;
@@ -39,21 +43,26 @@ void		draw_ship(void *img_ptr)
 {
 	int		i;
 	int		col;
-	double	temp;
 	char *data;
 	int bpp;
 	int size_line;
 	int *color_arr;
 	int row;
 	int max = 300;
+	int endian;
+	t_fract *var;
+	t_rgb rgb;
+	int color;
+	color_arr = make_col_arr();
 
-	 temp = 0;
+	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+	row = 0;
 	while (row < WIN_X)
 	{
 		col = -1;
 		while (++col < WIN_Y)
 		{
-			i = calc_iters_b(1.0, 1.0, 0.0, 300, row, col);
+			i = calc_iters_b(var, row, col);
 			if (i == max)
 				data[col + row * size_line / 4] = BLACK;
 			else

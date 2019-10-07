@@ -37,9 +37,9 @@ void		*make_col_arr(void)
 	int				*arr;
 
 
-	/*rgb.r = 218;
+	rgb.r = 218;
 	rgb.g = 219;
-	rgb.b = 213;*/
+	rgb.b = 213;
 	arr = (int *)malloc(sizeof(int) * 100);
 	c = -1;
 	r = 0;
@@ -70,8 +70,15 @@ int main (int ac, char **av)
 	void *win_ptr = mlx_new_window(mlx_ptr, width, height, "julia");
 	void *img_ptr = mlx_new_image(mlx_ptr, 2000, 1000);
 
-	draw_ship(img_ptr);
-	mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr , 400, 0);
+	//if (ft_strcmp(av[2], "julia"))
+	//	draw_julia(img_ptr);
+	//else if (ft_strcmp(av[2], "mandel"))
+	//	draw_mandel(img_ptr);
+	//else if (ft_strcmp(av[2], "burning"))
+		draw_ship(img_ptr);
+	//else 
+	//	ft_putendl("Type name of fractal");
+	mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr , 0, 0);
 	mlx_key_hook(win_ptr, deal_key, (void *)0);
 	
 	mlx_loop(mlx_ptr);

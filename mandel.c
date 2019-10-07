@@ -11,24 +11,27 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
-static int calc_iters_man(double zoom, int max, double move_x, double move_y, int row, int col, double temp)
+static int calc_iters_man(t_fract *var, int row, int col, double new_re)
 {
-  double pr, pi;    
-  double newRe, newIm, oldRe, oldIm;
-  zoom = 1; 
-  move_x = -0.5; 
-  move_y = 0; 
-  max = 300;
+  double pr = -0.7, pi = 0.27015;    
+  double old_re;
+  double new_im;
+  double old_im;
+  var->zoom = 1; 
+  var->move_x = -0.5; 
+  var->move_y = 0; 
+  var->max = 300;
+
   
-    pr = 1.5 * (row - WIN_X / 2) / (0.5 * zoom * WIN_X) + move_x;
-    pi = (col - WIN_Y / 2) / (0.5 * zoom * WIN_Y) + move_y;
-    newRe = newIm = oldRe = oldIm = 0; 
+    new_re = 1.5 * (row - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
+    new_im = (col - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
+    old_re = new_re;
+    old_im = new_im; 
     int i = -1;
-    while (++i < max && (SQR(newRe) + SQR(newIm)) <= 4.0)
+    while (++i < var->max && (SQR(new_re) + SQR(new_im)) <= 4.0)
     {
-      temp = SQR(oldRe) - SQR(oldIm) + pr;
-      newIm = 2 * oldRe * oldIm + pi;
-      newRe = temp;
+      new_re = SQR(old_re) - SQR(old_im) + pr;
+      new_im = 2 * old_re * old_im + pi;
     
     }
     return (i);
@@ -36,7 +39,6 @@ static int calc_iters_man(double zoom, int max, double move_x, double move_y, in
 
 void draw_mandel(void *img_ptr)
  {
-  	double temp;
 	int col;
 	int row;
  	int i;
@@ -45,20 +47,22 @@ void draw_mandel(void *img_ptr)
 	int endian;
  	char *data;
 	int *color_arr;
-	//color_arr = make_col_arr();
+  t_fract var;
+
+	color_arr = make_col_arr();
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	row = 0;
-  while (row < WIN_Y)
+  while (row < WIN_X)
   {
     col = -1;
-    while (++col < WIN_X)
+    while (++col < WIN_Y)
     {
-    	i = calc_iters_man(1.0, 300, -0.5, 0, row, col, temp);
+    	i = calc_iters_man(&var, row, col, 64);
   
       if (i == 300)
-				data[col + row * size_line / 4] = BLACK;
+				data[row + col * size_line / 4] = BLACK;
 			else
-				data[col + row * size_line / 4] = color_arr[i % 64];
+				data[row + col * size_line / 4] = color_arr[i % 64];
 	}
 		row++;
   

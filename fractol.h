@@ -31,9 +31,16 @@ typedef struct	s_rgb
 	 int g;
 	 int b;
 }				t_rgb;
+typedef struct s_fract
+{
+	double zoom;
+	double move_x;
+	double move_y;
+	int max;
+}			t_fract;
 
 
-static	int	calc_iters(double zoom,double move_x, double move_y, int max,  int row, int col);
+static	int	calc_iters(t_fract *var, int row, int col);
 void draw_mandel(void *img_ptr);
 void	draw_julia(void *img_ptr);
 void		*make_col_arr(void);

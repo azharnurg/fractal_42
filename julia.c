@@ -11,23 +11,27 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
-static	int	calc_iters(double zoom,double move_x, int max, double move_y,  int row, int col)
+static	int	calc_iters(t_fract *var, int row, int col)
 {
-	double	re_temp;
-	double	i_temp;
-	double	y;
-	double	x;
+	double	old_re;
+	double	old_im;
+	double	new_re;
+	double	new_im;
 	int		i;
+	var->max = 300;
+	var->move_x = 0;
+	var->move_y = 0;
+	var->zoom = 1;
 
-	y = 1.5 * (row - WIN_X / 2) / (0.5 * zoom * WIN_X) + move_x;
-	x = 1.5 * (col - WIN_Y / 2) / (0.5 * zoom * WIN_Y) + move_y;
+	new_re = 1.5 * (row - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
+	new_im = 1.5 * (col - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
 	i = -1;
-	while (++i < max && SQR(x) + SQR(y) <= 4.0)
+	while (++i < var->max && SQR(new_re) + SQR(new_im) <= 4.0)
 	{
-		re_temp = x;
-		i_temp = y;
-		x = SQR(re_temp) - SQR(i_temp) + (0.7);
-		y = 2 * (i_temp * re_temp) + (0.27015);
+		old_re = new_re;
+		old_im = new_im;
+		new_re = SQR(old_re) - SQR(new_im) + (var->move_x);
+		new_im = 2 * (old_im * old_re) + (var->move_y);
 	}
 	return (i);
 }
@@ -39,6 +43,7 @@ void	draw_julia(void *img_ptr)
 	int size_line;
 	int endian;
 	int *color_arr;
+	t_fract var;
 
 	color_arr = make_col_arr();
 	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
@@ -48,12 +53,12 @@ void	draw_julia(void *img_ptr)
 	int row;
 
 	row = 0;
-	while (row < WIN_Y)
+	while (row < WIN_X)
 	{
 		col = 0;
-		while (++col < WIN_X)
+		while (++col < WIN_Y)
 		{
-			i = calc_iters(1.0, 0, 300, 0, row, col);
+			i = calc_iters(&var, row, col);
 			if (i == 64)
 				data[row + col * size_line / 4] = BLACK;
 			
