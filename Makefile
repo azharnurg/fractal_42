@@ -21,6 +21,7 @@ SRCS	= draw.c\
 			julia.c\
 			mandel.c\
 			burningship.c\
+			main.c\
 
 OBJ 	= ${SRCS:.c=.o}
 INCLUDE = -I fractol.h -L ./libft -lft

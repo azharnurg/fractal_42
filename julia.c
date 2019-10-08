@@ -39,19 +39,15 @@ static	int	calc_iters(t_fract *var, int row, int col)
 void	draw_julia(void *img_ptr)
 {
 	char *data;
-	int bpp;
-	int size_line;
-	int endian;
 	int *color_arr;
 	t_fract var;
-
-	color_arr = make_col_arr();
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
-	
+	t_mlx mlx;
 	int	i;
 	int	col;
 	int row;
 
+	color_arr = make_col_arr();
+	data = mlx_get_data_addr(img_ptr, &mlx.bpp, &mlx.size_line, &mlx.endian);
 	row = 0;
 	while (row < WIN_X)
 	{

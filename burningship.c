@@ -33,7 +33,6 @@ static	int	calc_iters_b(t_fract *var, int row, int col)
 	i = -1;
 	while (SQR(new_re) + SQR(new_im) <= 4.0 && ++i < var->max)
 	{
-		//old_re = new_re;
 		old_re = SQR(new_re) - SQR(new_im) + pr;
 		new_im = 2 * fabs(new_re * new_im) + pi;
 		new_re = old_re;

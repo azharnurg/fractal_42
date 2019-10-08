@@ -18,12 +18,10 @@ static int calc_iters_man(t_fract *var, int row, int col, double new_re)
   double old_re;
   double new_im;
   double old_im;
-  var->zoom = 1; 
+ var->zoom = 1; 
   var->move_x = -0.5; 
   var->move_y = 0; 
   var->max = 300;
-
-  
     pr = 1.5 * (row - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
     pi = (col - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
     old_re = new_re = old_im = new_im = 0;
@@ -44,15 +42,13 @@ void draw_mandel(void *img_ptr)
 	int col;
 	int row;
  	int i;
- 	int bpp;
-	int size_line;
-	int endian;
  	char *data;
 	int *color_arr;
+  t_mlx mlx;
   t_fract var;
 
 	color_arr = make_col_arr();
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
+	data = mlx_get_data_addr(img_ptr, &mlx.bpp, &mlx.size_line, &mlx.endian);
 	row = 0;
   while (row < WIN_X)
   {
@@ -60,7 +56,6 @@ void draw_mandel(void *img_ptr)
     while (++col < WIN_Y)
     {
     	i = calc_iters_man(&var, row, col, 64);
-  
       if (i == 300)
 				data[col * 4 + row * WIN_Y * 4] = BLACK;
 			else

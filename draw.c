@@ -17,17 +17,6 @@
 # define SQR(x)					(x * x)
 # define BLACK			0x0
 
-
-int				deal_key(int key, void *param)
-{
-	if (key == 53)
-	{
-		ft_putendl("IT is time to go Bye Bye");
-		exit(0);
-	}
-	return (0);
-}
-
 void		*make_col_arr(void)
 {
 	t_rgb			rgb;
@@ -44,7 +33,7 @@ void		*make_col_arr(void)
 	r = 0;
 	while (c <  100)
 	{
-		rgb.r = (cos(r) + 1) * 127;
+		rgb.r = (cos(r) + 1) * 150;
 		rgb.g = (sin(r) + 1) * 127;
 		rgb.b = (-cos(r) + 1) * 127;
 		arr[c] = rgb.b | rgb.g << 4 | rgb.r << 16;
@@ -53,34 +42,3 @@ void		*make_col_arr(void)
 	}
 	return arr;
 } 
-
-
-
-
-int main (int ac, char **av)
-{
-	int width = WIN_X;
-	int height = WIN_Y;
-	double zoom = 1.0; 
-  	double move_x = -0.5; 
-  	double move_y = 0.0; 
-
-	void *mlx_ptr = mlx_init();
-	void *win_ptr = mlx_new_window(mlx_ptr, width, height, "julia");
-	void *img_ptr = mlx_new_image(mlx_ptr, WIN_Y, WIN_X);
-
-	//if (ft_strcmp(av[2], "julia"))
-	//	draw_julia(img_ptr);
-	//else if (ft_strcmp(av[2], "mandel"))
-	//	draw_mandel(img_ptr);
-	//else if (ft_strcmp(av[2], "burning"))
-		draw_ship(img_ptr);
-	//else 
-	//	ft_putendl("Type name of fractal");
-	mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr , 0, 0);
-	mlx_key_hook(win_ptr, deal_key, (void *)0);
-	
-	mlx_loop(mlx_ptr);
-	return (0);
-
-}
