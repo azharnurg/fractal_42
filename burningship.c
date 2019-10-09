@@ -72,3 +72,14 @@ void		draw_ship(void *img_ptr)
 		row++;
 	}
 }
+
+void init_window_ship(t_fract *set)
+{
+	set->mlx_ptr = mlx_init();
+	set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "BURNING SHIP");
+	set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_Y, WIN_X);
+	draw_ship(set->img_ptr);
+	mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
+	mlx_key_hook(set->win_ptr, deal_key, (void *)0);	
+	mlx_loop(set->mlx_ptr);
+}

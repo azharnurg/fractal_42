@@ -31,8 +31,8 @@
 # define M_UPSCRLL		0x04
 # define M_DWNSCRLL		0x05
 
-# define NEW_XOFF(x, zoom)		0.15 * ((x - WIN_WSPLIT) / (WIN_WSPLIT / zoom))
-# define NEW_YOFF(y, zoom)		0.15 * ((y - WIN_HSPLIT) / (WIN_HSPLIT / zoom))
+# define NEW_XOFF(x, zoom)		0.15 * ((x - WIN_X / 2) / (WIN_X / 2 / zoom))
+# define NEW_YOFF(y, zoom)		0.15 * ((y - WIN_Y / 2) / (WIN_Y / 2 / zoom))
 
 
 
@@ -71,4 +71,10 @@ void		*make_col_arr(void);
 void		draw_ship(void *img_ptr);
 int				julia_mouse_hook(int x, int y, t_fract *fract);
 int				mouse_hooks(int button, int x, int y, t_fract *e);
+void init_window_ship(t_fract *set);
+void init_window_mandel(t_fract *set);
+void init_window_julia(t_fract *set);
+int				deal_key(int key, void *param);
+
+
 #endif
