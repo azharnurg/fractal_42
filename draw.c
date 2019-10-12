@@ -17,6 +17,7 @@
 # define SQR(x)					(x * x)
 # define BLACK			0x0
 
+
 void		*make_col_arr(void)
 {
 	t_rgb			rgb;
@@ -24,20 +25,16 @@ void		*make_col_arr(void)
 	float			r;
 	int				*arr;
 
-
-	rgb.r = 218;
-	rgb.g = 219;
-	rgb.b = 213;
 	arr = (int *)malloc(sizeof(int) * 100);
 	c = -1;
 	r = 0;
 	while (c <  100)
 	{
-		rgb.r = (cos(r) + 1) * 150;
-		rgb.g = (sin(r) + 1) * 127;
-		rgb.b = (-cos(r) + 1) * 127;
-		arr[c] = rgb.b | rgb.g << 4 | rgb.r << 16;
-		r += M_PI / 6;
+		rgb.r = (-cos(r) + 1) * 10;
+		rgb.g = (sin(r) + 1) * 120;
+		rgb.b = (cos(r) + 1) * 10;
+		arr[c] = rgb.b << 16 | rgb.g << 4 | rgb.r << 0x10;
+		r += M_PI / 2;
 		c++;
 	}
 	return arr;

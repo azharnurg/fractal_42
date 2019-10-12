@@ -12,26 +12,14 @@
 
 #include "fractol.h"
 
-int				deal_key(int key, void *param)
-{
-	if (key == 53)
-	{
-		ft_putendl("IT is time to go Bye Bye");
-		exit(0);
-	}
-	
-	return (0);
-}
-
 int				julia_mouse_hook(int x, int y, t_fract *fract)
 {
-	void *img_ptr;
 	if (fract->flag == 0 && x < WIN_X & y < WIN_Y)
 	{
 		fract->mouse_y = y;
 		fract->mouse_x = x;
 	}
-	draw_julia(img_ptr);
+	draw_julia(fract);
 	return (0);
 }
 
@@ -60,5 +48,22 @@ int				mouse_hooks(int button, int x, int y, t_fract *e)
 		zoom_in(x, y, e);
 	else if (button == M_DWNSCRLL || button == M_RCLICK)
 		zoom_out(x, y, e);
+	draw_julia(e);
+	mlx_put_image_to_window(e->mlx_ptr,e->win_ptr,e->img_ptr , 0, 0);
+	return (0);
+}
+
+int				deal_key(int key, t_fract fractol)
+{
+	if (key == 53)
+	{
+		ft_putendl("IT is time to go Bye Bye");
+		exit(0);
+	}
+	else if (keycode == KEY_ANSI_I)
+		zoom_in((WIN_WIDTH / 2), (WIN_HEIGHT / 2), fractol);
+	else if (keycode == KEY_ANSI_O)
+		zoom_out(fractol);
+	
 	return (0);
 }

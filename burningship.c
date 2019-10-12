@@ -21,10 +21,6 @@ static	int	calc_iters_b(t_fract *var, int row, int col)
 	int		i;
 	int old_im;
 	double old_re;
-	var->zoom = 1; 
-  var->move_x = -0.5; 
-  var->move_y = 0; 
-  var->max = 300;
 
 	new_re = 0;
 	new_im = 0;
@@ -40,37 +36,36 @@ static	int	calc_iters_b(t_fract *var, int row, int col)
 	return (i);
 }
 
-void		draw_ship(void *img_ptr)
+void		draw_ship(t_fract *set)
 {
-	int		i;
-	int		col;
-	char *data;
-	int bpp;
-	int size_line;
-	int *color_arr;
+	int col;
 	int row;
-	int max = 300;
-	int endian;
-	t_fract *var;
-	t_rgb rgb;
-	int color;
-	color_arr = make_col_arr();
+ 	int i;
 
-	data = mlx_get_data_addr(img_ptr, &bpp, &size_line, &endian);
 	row = 0;
-	while (row < WIN_X)
-	{
-		col = -1;
-		while (++col < WIN_Y)
-		{
-			i = calc_iters_b(var, row, col);
-			if (i == max)
-				data[col * 4 + row * WIN_Y * 4] = BLACK;
+  while (row < WIN_X)
+  {
+    col = -1;
+    while (++col < WIN_Y)
+    {
+    	i = calc_iters_b(set, row, col);
+      if (i == 300)
+				set->data[col * 4 + row * WIN_Y * 4] = BLACK;
 			else
-				data[col * 4 + row * WIN_Y * 4] = color_arr[i % 64];
-		}
-		row++;
+				set->data[col * 4 + row * WIN_Y * 4] = set->color_arr[i % 100];
 	}
+		row++;
+  
+  }
+}
+
+static void setup_env(t_fract *var)
+{
+ var->zoom = 1;   
+  var->move_x = -0.5; 
+  var->move_y = 0; 
+  var->max = 1024;
+
 }
 
 void init_window_ship(t_fract *set)
@@ -78,8 +73,12 @@ void init_window_ship(t_fract *set)
 	set->mlx_ptr = mlx_init();
 	set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "BURNING SHIP");
 	set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_Y, WIN_X);
-	draw_ship(set->img_ptr);
-	mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
-	mlx_key_hook(set->win_ptr, deal_key, (void *)0);	
+	set->data =mlx_get_data_addr(set->img_ptr, &(set->mlx_data.bpp), &(set->mlx_data.size_line), &(set->mlx_data.endian));
+  	set->color_arr = make_col_arr();
+  	setup_env(set);
+ 	draw_ship(set);
+  	mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
+  	mlx_key_hook(set->win_ptr, deal_key, (void *)0);  
+ 	mlx_mouse_hook(set->win_ptr, mouse_hooks, set);
 	mlx_loop(set->mlx_ptr);
 }

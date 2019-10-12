@@ -51,10 +51,12 @@ int main (int ac, char **av)
 		{
 			init_window_ship(var);
 		}
+		else if (ft_strcmp(av[1], "JX") == 0)
+			init_window_jx(var);
 		else 
 			ft_putendl("error: wrong fractal");
 	}
 	else
-		ft_putendl("Gimme one fractal: M - Mandelbrot; J - Julia; S - BurningShip.");
+		ft_putendl("Gimme one fractal: M - Mandelbrot; J - Julia; S - BurningShip; JX = Julia Explorer.");
 	return (0);
 }
