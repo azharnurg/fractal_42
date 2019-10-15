@@ -23,7 +23,7 @@ SRCS	= draw.c\
 			burningship.c\
 			main.c\
 			hooks.c\
-			heart.c\
+			
 
 OBJ 	= ${SRCS:.c=.o}
 INCLUDE = -I fractol.h -L ./libft -lft

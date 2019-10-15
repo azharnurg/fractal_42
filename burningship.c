@@ -68,17 +68,17 @@ static void setup_env(t_fract *var)
 
 }
 
-void init_window_ship(t_fract *set)
+/*void init_window_ship(t_fract *set)
 {
 	set->mlx_ptr = mlx_init();
 	set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "BURNING SHIP");
 	set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_Y, WIN_X);
 	set->data =mlx_get_data_addr(set->img_ptr, &(set->mlx_data.bpp), &(set->mlx_data.size_line), &(set->mlx_data.endian));
-  	set->color_arr = make_col_arr();
+  	set->color_arr = make_col_arr(set);
   	setup_env(set);
  	draw_ship(set);
   	mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
   	mlx_key_hook(set->win_ptr, deal_key, (void *)0);  
  	mlx_mouse_hook(set->win_ptr, mouse_hooks, set);
 	mlx_loop(set->mlx_ptr);
-}
+}*/

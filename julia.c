@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
-static	int	calc_iters(t_fract *var, int row, int col)
+static	int	calc_iters(t_fract *set, int row, int col)
 {
 	double	old_re;
 	double	old_im;
@@ -19,58 +19,57 @@ static	int	calc_iters(t_fract *var, int row, int col)
 	double	new_im;
 	int		i;
 
-	new_re = 1.5 * (row - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
-	new_im = 1.5 * (col - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
-	i = -1;
-	while (++i < var->max && SQR(new_re) + SQR(new_im) <= 4.0)
+	new_re = 1.5 * (row - WIN_X / 2) / (0.5 * set->zoom * WIN_X) + set->move_x;
+	new_im = 1.5 * (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
+	i = 0;
+	while (i++ < set->max && SQR(new_re) + SQR(new_im) <= 4.0)
 	{
 		old_re = new_re;
 		old_im = new_im;
-		new_re = SQR(old_re) - SQR(new_im) + (var->move_x * 4.0 / WIN_X - 2.0);
-		new_im = 2 * (old_im * old_re) + (var->move_y * 4.0 / WIN_Y - 2.0);
+		new_re = SQR(old_re) - SQR(new_im) + (set->mouse_x * 4.0 / WIN_X - 2.0);
+		new_im = 2 * (old_im * old_re) + (set->mouse_y * 4.0 / WIN_Y - 2.0);
 	}
 	return (i);
 }
 
-void	draw_julia(t_fract *set)
+void	draw_julia(t_fract *set, int row, int rowdist)
 {
-	t_mlx mlx;
 	int	i;
 	int	col;
-	int row;
 
 	row = 0;
-	while (row < WIN_X)
+	while (row++ < rowdist)
 	{
 		col = 0;
-		while (++col < WIN_Y)
+		
+		while (++col < WIN_X)
 		{
 			i = calc_iters(set, row, col);
-			if (i == 64)
-				set->data[col * 4 + row * (WIN_Y * 4)] = BLACK;
-			
-				set->data[col * 4 + row * (WIN_Y * 4)] = set->color_arr[i % 64];
+			if (i == set->max)
+				set->data[col + row * (set->mlx_data.size_line / 4)] = BLACK;
+			else
+				set->data[col + row * (set->mlx_data.size_line / 4)] = set->color_arr[i % 64];
 		}
-		row++;
 	}
 }
 
-static void setup_env(t_fract *var)
+static void setup_env(t_fract *set)
 {
- var->zoom = 1;   
-  var->move_x = 0; 
-  var->move_y = 0; 
-  var->max = 300;
+	set->zoom = 1; 
+	set->move_x = 0;
+	set->move_y = 0;
+	set->max = 64;
+
 }
 void init_window_julia(t_fract *set)
 {
   set->mlx_ptr = mlx_init();
   set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "JULIA");
-  set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_Y, WIN_X);
+  set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_X, WIN_Y);
   set->data = mlx_get_data_addr(set->img_ptr, &(set->mlx_data.bpp), &(set->mlx_data.size_line), &(set->mlx_data.endian));
-  set->color_arr = make_col_arr();
+  set->color_arr = make_col_arr(set);
   setup_env(set);
-  draw_julia(set);
+  thread(set);
   mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
   mlx_key_hook(set->win_ptr, deal_key, (void *)0);  
  mlx_mouse_hook(set->win_ptr, mouse_hooks, set);

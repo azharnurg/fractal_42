@@ -17,10 +17,11 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <pthread.h>
 # define KEY_ESC 53
 
-#define WIN_X 500
-#define WIN_Y 500
+#define WIN_X 2000
+#define WIN_Y 2000
 # define ZOOM_SCALE		0.90
 #define M_PI        3.14159265358979323846264338327950288  
 # define SQR(x)					(x * x)
@@ -33,20 +34,18 @@
 # define M_DWNSCRLL		0x05
 
 //key code
-# define KEY_ANSI_I		0X22
-# define KEY_ANSI_O		0X1F
+# define KEY_ANSI_I		34
+# define KEY_ANSI_O		31
 
 # define NEW_XOFF(x, zoom)		0.15 * ((x - WIN_X / 2) / (WIN_X / 2 / zoom))
 # define NEW_YOFF(y, zoom)		0.15 * ((y - WIN_Y / 2) / (WIN_Y / 2 / zoom))
 
-typedef struct s_mlx
+typedef struct	s_mlx
 {
 	int bpp;
 	int size_line;
 	int endian;
 }				t_mlx;
-
-
 
 typedef struct	s_rgb
 {
@@ -66,27 +65,39 @@ typedef struct s_fract
 	int max;
 	int flag;
 	int					*color_arr;
+	int 	fract_num;
 	void *mlx_ptr;
 	void *win_ptr;
 	void *img_ptr;
 	void *param;
-	char	*data;
+	char *data;
+	int  *arr;
+	t_rgb	rgb;
 	t_mlx	mlx_data;
 }			t_fract;
 
+typedef struct 		s_thread
+{
+	t_fract *fract;
+	int row;
+	int rowdist;
+}					t_thread;
 
 static	int	calc_iters(t_fract *var, int row, int col);
-void 	draw_mandel(t_fract *e);
-void	draw_julia(t_fract *set);
+void draw_mandel(t_fract *set, int row, int rowdist);
+void	draw_julia(t_fract *set, int row, int rowdist);
 void	draw_ship(t_fract *set);
 void init_window_ship(t_fract *set);
 void init_window_mandel(t_fract *set);
 void init_window_julia(t_fract *set);
-void		*make_col_arr(void);
+void		*make_col_arr(t_fract *set);
 int				julia_mouse_hook(int x, int y, t_fract *fract);
 int				mouse_hooks(int button, int x, int y, t_fract *e);
-int				deal_key(int key, void *param);
+int				deal_key(int key, t_fract *e);
 void init_window_jx(t_fract *set);
+void thread(t_fract *f);
+void choose_fract(t_fract *set);
+static void setup_env(t_fract *set);
 
 
 #endif

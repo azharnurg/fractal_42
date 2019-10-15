@@ -11,73 +11,72 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
-static int calc_iters_man(t_fract *var, int row, int col, double new_re)
+static int calc_iters_man(t_fract *set, int row, int col, double new_re)
 {
   double pr; 
   double pi;    
   double old_re;
   double new_im;
   double old_im;
+  int i;
 
-    pr = 1.5 * (row - WIN_X / 2) / (0.5 * var->zoom * WIN_X) + var->move_x;
-    pi = (col - WIN_Y / 2) / (0.5 * var->zoom * WIN_Y) + var->move_y;
-    old_re = new_re = old_im = new_im = 0;
-    int i = -1;
-    while (++i < var->max && (SQR(new_re) + SQR(new_im)) <= 4.0)
-    {
-      old_re = new_re;
-      old_im = new_im;
-      new_re = SQR(old_re) - SQR(old_im) + pr;
-      new_im = 2 * old_re * old_im + pi;
+  pr = 1.5 * (row - WIN_X / 2) / (0.5 * set->zoom * WIN_X) + set->move_x;
+  pi = 1.5 * (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
+  old_re = 0;
+  old_im = 0;
+  i = 0;
+  while (i++ < set->max && (SQR(old_re) + SQR(old_im)) <= 4.0)
+  {
+    new_re = SQR(old_re) - SQR(old_im) + pr;
+    old_im = 2 * old_re * old_im + pi;
+    old_re = new_re;
     
-    }
-    return (i);
+  }
+  return (i);
 }
 
-void draw_mandel(t_fract *set)
+void draw_mandel(t_fract *set, int row, int rowdist)
  {
   int col;
-  int row;
   int i;
+  int temp;
   
-  row = 0;
-  while (row < WIN_X)
+  temp = 0;
+  while (row++ < rowdist)
   {
-    col = -1;
-    while (++col < WIN_Y)
+    col = 0;
+    while (col++ < WIN_X)
     {
-      i = calc_iters_man(set, row, col, 64);
+      i = calc_iters_man(set, row, col, temp);
       if (i == set->max)
-        set->data[col * 4 + row * WIN_Y * 4] = BLACK;
+        set->data[col + row * (set->mlx_data.size_line / 4)] = BLACK;
       else
-        set->data[col * 4 + row * WIN_Y * 4] = set->color_arr[i % 100];
-  }
-    row++;
-  
+        set->data[col + row * (set->mlx_data.size_line / 4)] = set->color_arr[i % 64];
+    }
   }
 }
 
 
 
-static void setup_env(t_fract *var)
+/*static void setup_env(t_fract *set)
 {
- var->zoom = 1;   
-  var->move_x = -0.5; 
-  var->move_y = 0; 
-  var->max = 1024;
+  set->zoom = 1;   
+  set->move_x = -0.5; 
+  set->move_y = 0; 
+  set->max = 1024;
 
-}
-void init_window_mandel(t_fract *set)
+}*/
+/*void init_window_mandel(t_fract *set)
 {
   set->mlx_ptr = mlx_init();
   set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "MANDELBROT");
   set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_Y, WIN_X);
   set->data =mlx_get_data_addr(set->img_ptr, &(set->mlx_data.bpp), &(set->mlx_data.size_line), &(set->mlx_data.endian));
-  set->color_arr = make_col_arr();
+  set->color_arr = make_col_arr(set);
   setup_env(set);
-  draw_mandel(set);
+  thread(set);
   mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
   mlx_key_hook(set->win_ptr, deal_key, (void *)0);  
   mlx_mouse_hook(set->win_ptr, mouse_hooks, set);
   mlx_loop(set->mlx_ptr);
-}
+}*/

@@ -49,7 +49,7 @@ void		draw_jx(void *img_ptr)
   t_mlx mlx;
   t_fract var;
 
-	color_arr = make_col_arr();
+	color_arr = make_col_arr(set);
 	data = mlx_get_data_addr(img_ptr, &mlx.bpp, &mlx.size_line, &mlx.endian);
 	row = 0;
   while (row < WIN_X)
