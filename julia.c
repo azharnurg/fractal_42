@@ -22,7 +22,7 @@ static	int	calc_iters(t_fract *set, int row, int col)
 	new_re = 1.5 * (row - WIN_X / 2) / (0.5 * set->zoom * WIN_X) + set->move_x;
 	new_im = 1.5 * (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
 	i = 0;
-	while (i++ < set->max && SQR(new_re) + SQR(new_im) <= 4.0)
+	while (i++ < 42 && SQR(new_re) + SQR(new_im) <= 4.0)
 	{
 		old_re = new_re;
 		old_im = new_im;
@@ -32,23 +32,27 @@ static	int	calc_iters(t_fract *set, int row, int col)
 	return (i);
 }
 
-void	draw_julia(t_fract *set, int row, int rowdist)
-{
-	int	i;
-	int	col;
+void draw_julia(t_fract *set, int row, int rowdist)
+ {
+  int col;
+  int i;
+  int temp;
+  int pos;
+  
+  temp = 0;
 
-	row = 0;
-	while (row++ < rowdist)
-	{
-		col = 0;
-		
-		while (++col < WIN_X)
-		{
-			i = calc_iters(set, row, col);
-			if (i == set->max)
-				set->data[col + row * (set->mlx_data.size_line / 4)] = BLACK;
-			else
-				set->data[col + row * (set->mlx_data.size_line / 4)] = set->color_arr[i % 100];
-		}
-	}
+  while (row < rowdist)
+  {
+    col = 0;
+    while (col++ < WIN_X)
+    {
+      i = calc_iters(set, row, col);
+      pos = (col * 4) + (row * 1000 * 4);
+      if (i == set->max)
+        set->data[pos] = BLACK;
+      else
+        set->data[pos] = set->color_arr[i % 16];
+    }
+    row++;
+  }
 }

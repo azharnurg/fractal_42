@@ -36,36 +36,33 @@ static	int	calc_iters_b(t_fract *var, int row, int col)
 	return (i);
 }
 
-void		draw_ship(t_fract *set, int row, int rowdist)
-{
-	int col;
- 	int i;
 
-	row = 0;
+void draw_ship(t_fract *set, int row, int rowdist)
+ {
+  int col;
+  int i;
+  int temp;
+  int pos;
+  
+  temp = 0;
+
   while (row < rowdist)
   {
     col = 0;
-    while (col++ < WIN_Y)
+    while (col++ < WIN_X)
     {
-    	i = calc_iters_b(set, row, col);
+      i = calc_iters_b(set, row, col);
+      pos = (col * 4) + (row * 1000 * 4);
       if (i == set->max)
-				set->data[col + row * (set->mlx_data.size_line / 4 )] = BLACK;
-			else
-				set->data[col + row * (set->mlx_data.size_line / 4) ] = set->color_arr[i % 100];
-	}
-		row++;
-  
+        set->data[pos] = BLACK;
+      else
+        set->data[pos] = set->color_arr[i % 16];
+    }
+    row++;
   }
 }
 
-static void setup_env(t_fract *var)
-{
- var->zoom = 1;   
-  var->move_x = -0.5; 
-  var->move_y = 0; 
-  var->max = 1024;
 
-}
 
 /*void init_window_ship(t_fract *set)
 {
