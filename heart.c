@@ -11,13 +11,10 @@
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-int			julia_explorer(t_fract *set, int row, int col)
+/*int			calc_iters_heart(t_fract *set, int row, int col)
 {
 	double	new_im;
 	double	new_re;
-	double	pr = -0.7709787210451183;
-	double	pi = -0.4477065469412519;
 	int		i;
 	double old_im;
 	double old_re;
@@ -27,7 +24,9 @@ int			julia_explorer(t_fract *set, int row, int col)
   set->max = 128;
 
 	new_re = 1.5 * (row - WIN_X / 2) / (0.5 * set->zoom * WIN_X) + set->move_x;
-	new_im = (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
+	new_im = 1.5 * (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
+	new_re = (set->mouse_x - WIN_X) / ((double)WIN_X * 2) + 0.25;
+  	old_im = (set->mouse_y - WIN_Y) / ((double)WIN_Y) + 0.50;
 	i = 0;
 	while (++i < set->max && SQR(new_re) + SQR(new_im) <= 4.0)
 	{
@@ -38,7 +37,58 @@ int			julia_explorer(t_fract *set, int row, int col)
 	}
 	return (i);
 }
+*/
 
+int			calc_iters_heart(t_fract *set, int row, int col)
+{
+	int		i;
+	double	new_re;
+	double new_im;
+	double old_re;
+	double old_im;
+	double pr;
+	double pi;
+
+	pr = 1.5 * (row - WIN_X / 2) / (0.5 * set->zoom * WIN_X) + set->move_x;
+	pi = 1.5 * (col - WIN_Y / 2) / (0.5 * set->zoom * WIN_Y) + set->move_y;
+	new_re = 0; 
+	new_im = 0; 
+	i = 0;
+	while (i < set->max && pr + pi <= 4)
+	{
+		 new_re = SQR(pr) - SQR(pi) + pr;
+		 new_im = 2 *  pr *  pi + pi;
+		i++;
+	}
+	return (i);
+}
+
+void draw_heart(t_fract *set, int row, int rowdist)
+ {
+  int col;
+  int i;
+  int temp;
+  int pos;
+  
+  temp = 0;
+
+  while (row < rowdist)
+  {
+    col = 0;
+    while (col++ < WIN_X)
+    {
+      i = calc_iters_heart(set, row, col);
+      pos = (col * 4) + (row * 1000 * 4);
+      if (i == set->max)
+        set->data[pos] = BLACK;
+      else
+        set->data[pos] = set->color_arr[i % 16];
+    }
+    row++;
+  }
+}
+
+/*
 void		draw_jx(void *img_ptr)
 {
 	int col;
@@ -77,4 +127,4 @@ void init_window_jx(t_fract *set)
 	mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
 	mlx_key_hook(set->win_ptr, deal_key, (void *)0);	
 	mlx_loop(set->mlx_ptr);
-}
+}*/
