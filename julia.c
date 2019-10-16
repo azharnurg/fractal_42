@@ -48,31 +48,7 @@ void	draw_julia(t_fract *set, int row, int rowdist)
 			if (i == set->max)
 				set->data[col + row * (set->mlx_data.size_line / 4)] = BLACK;
 			else
-				set->data[col + row * (set->mlx_data.size_line / 4)] = set->color_arr[i % 64];
+				set->data[col + row * (set->mlx_data.size_line / 4)] = set->color_arr[i % 100];
 		}
 	}
-}
-
-static void setup_env(t_fract *set)
-{
-	set->zoom = 1; 
-	set->move_x = 0;
-	set->move_y = 0;
-	set->max = 64;
-
-}
-void init_window_julia(t_fract *set)
-{
-  set->mlx_ptr = mlx_init();
-  set->win_ptr = mlx_new_window(set->mlx_ptr, WIN_X, WIN_Y, "JULIA");
-  set->img_ptr = mlx_new_image(set->mlx_ptr, WIN_X, WIN_Y);
-  set->data = mlx_get_data_addr(set->img_ptr, &(set->mlx_data.bpp), &(set->mlx_data.size_line), &(set->mlx_data.endian));
-  set->color_arr = make_col_arr(set);
-  setup_env(set);
-  thread(set);
-  mlx_put_image_to_window(set->mlx_ptr,set->win_ptr,set->img_ptr , 0, 0);
-  mlx_key_hook(set->win_ptr, deal_key, (void *)0);  
- mlx_mouse_hook(set->win_ptr, mouse_hooks, set);
- mlx_hook(set->win_ptr, 6, 0, julia_mouse_hook, set);
-  mlx_loop(set->mlx_ptr);
 }

@@ -36,23 +36,22 @@ static	int	calc_iters_b(t_fract *var, int row, int col)
 	return (i);
 }
 
-void		draw_ship(t_fract *set)
+void		draw_ship(t_fract *set, int row, int rowdist)
 {
 	int col;
-	int row;
  	int i;
 
 	row = 0;
-  while (row < WIN_X)
+  while (row < rowdist)
   {
-    col = -1;
-    while (++col < WIN_Y)
+    col = 0;
+    while (col++ < WIN_Y)
     {
     	i = calc_iters_b(set, row, col);
-      if (i == 300)
-				set->data[col * 4 + row * WIN_Y * 4] = BLACK;
+      if (i == set->max)
+				set->data[col + row * (set->mlx_data.size_line / 4 )] = BLACK;
 			else
-				set->data[col * 4 + row * WIN_Y * 4] = set->color_arr[i % 100];
+				set->data[col + row * (set->mlx_data.size_line / 4) ] = set->color_arr[i % 100];
 	}
 		row++;
   
